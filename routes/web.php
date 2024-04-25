@@ -19,7 +19,19 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->group(function(){
-    Route::resource('/home', AdminController::class);
     Route::match(['get', 'post'], 'login', [AdminController::class, 'login']);
+
+    Route::group(['middleware'=>'admin'], function(){
+        Route::resource('/dashboard', AdminController::class);
+    });
+
+    //logout
+    Route::get('logout', [AdminController::class, 'logout']);
+
+    //update password
+    Route::match(['get', 'post'],'update-password', [AdminController::class, 'updatePassword']);
+
+    //update password
+    Route::post('check-current-password', [AdminController::class, 'checkCurrentPassword']);
 });
 
